@@ -17,9 +17,9 @@ public class Dijkstra {
         for (Node node : graph.getNodes()) {
             dist.put(node, Double.MAX_VALUE);
             prev.put(node, null);
-            pq.add(node);
         }
         dist.put(start, 0.0);
+        pq.add(start);  // adding only the starting node with a distance of 0
 
         while (!pq.isEmpty()) {
             Node u = pq.poll();
@@ -34,6 +34,7 @@ public class Dijkstra {
                 if (distanceThroughU < dist.get(v)) {
                     dist.put(v, distanceThroughU);
                     prev.put(v, u);
+                    pq.remove(v); // Remove the node first to ensure proper ordering
                     pq.add(v);
                 }
             }
@@ -48,6 +49,9 @@ public class Dijkstra {
         }
         Collections.reverse(path);
         return path;
+    }
+    public List<Node> findMostCulturalPath(Node start, Node end) {
+        return dijkstra(start, end, true)
     }
 }
 
