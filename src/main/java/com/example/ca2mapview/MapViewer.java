@@ -18,7 +18,7 @@ public class MapViewer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MapViewer.class.getResource("MapView.fxml"));
-        scene = new Scene(fxmlLoader.load(), 600, 400);
+        scene = new Scene(fxmlLoader.load(), 1000, 700);
 
         stage.setTitle("Map Viewer");
         stage.setScene(scene);

@@ -5,11 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -19,18 +21,48 @@ import java.io.IOException;
 public class MapViewController {
 
     @FXML
-    private ImageView imageView;
+    private Canvas canvas;
+
+    @FXML
+    private ComboBox<String> routeTypeCombo;
+
+    @FXML
+    private TextField startPoint;
+    @FXML
+    private TextField endPoint;
+    private GraphicsContext gc;
+    private double startX, startY, endX, endY;
 
     private Scene mainScene;
 
-    @FXML
-    private Label filenameLabel;
+    public void initialize() {
+        gc = canvas.getGraphicsContext2D();
+        drawMap();
+        canvas.setOnMouseClicked(this::handleCanvasClick);
+    }
 
-    @FXML
-    private Label imageSizeLabel;
-
-    @FXML
-    private Slider resizeSlider;
+    private void clearCanvas() {
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+    }
+    private void handleCanvasClick(MouseEvent event) {
+        if (startPoint.getText().isEmpty()) {
+            startX = event.getScreenX();
+            startY = event.getScreenY();
+            startPoint.setText(String.format("X: %.2f, Y: %.2f", startX, startY));
+        } else if (endPoint.getText().isEmpty()) {
+            endX = event.getScreenX();
+            endY = event.getScreenY();
+            endPoint.setText(String.format("X: %.2f, Y: %.2f", endX, endY));
+            drawRoute(startX, startY, endX, endY);
+        }
+    }
+    private void drawMap() {
+        // Here you would load and draw your base map
+        // and set a background color
+        gc.setFill(Color.WHITE);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+    }
 
     public void setMainScene(Scene mainScene) {
         this.mainScene = mainScene;
@@ -47,40 +79,29 @@ public class MapViewController {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             Image image = new Image(selectedFile.toURI().toString());
-            imageView.setImage(image);
-
-            filenameLabel.setText("Filename: " + selectedFile.getName());
-            imageSizeLabel.setText("Image Size: " + (int) image.getWidth() + " x " + (int) image.getHeight());
-
-            resizeSlider.setValue(1.0);
-        }
-    }
-    @FXML
-    private void displayDetails() {
-        // Get the currently displayed image
-        Image displayedImage = imageView.getImage();
-        if (displayedImage != null) {
-            filenameLabel.setText("Filename: " + "Untitled");
-            imageSizeLabel.setText("Image Size: " + (int) displayedImage.getWidth() + " x " + (int) displayedImage.getHeight());
-        } else {
-            showAlert("No Image", "No image is currently displayed.");
+            gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
         }
     }
 
+    // You can add methods here to draw routes on the canvas
+    public void drawRoute(double startX, double startY, double endX, double endY) {
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(2);
+        gc.strokeLine(startX, startY, endX, endY);
+    }
     @FXML
-    private void resizeImage() {
-        // Resize the image based on the slider value
-        double scaleFactor = resizeSlider.getValue();
-        imageView.setScaleX(scaleFactor);
-        imageView.setScaleY(scaleFactor);
+    private void findRoute() {
+        //Placeholder for route finding logic
+        String routeType = routeTypeCombo.getValue();
+        Alert alert = new Alert (Alert.AlertType.INFORMATION);
+        alert.setContentText("FINDING ROUTE OF TYPE: " + routeType);
+        alert.show();
     }
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+    @FXML
+    private void closeApplication(){
+        System.exit(0);
     }
+
     @FXML
     public void returnToMainGUI(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("MainGUIApp.fxml"));
