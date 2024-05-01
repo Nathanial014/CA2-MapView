@@ -50,8 +50,46 @@ public class Dijkstra {
         Collections.reverse(path);
         return path;
     }
+//    public List<Node> findMostCulturalPath(Node start, Node end) {
+//        return dijkstra(start, end, true);
+//    }
     public List<Node> findMostCulturalPath(Node start, Node end) {
-        return dijkstra(start, end, true);
+        // This map holds the highest cultural value attainable at each node.
+        Map<Node, Double> maxCulturalValue = new HashMap<>();
+        // This map keeps track of the previous node in the optimal path.
+        Map<Node, Node> prev = new HashMap<>();
+        // Priority queue to explore the nodes with the highest cultural values first.
+        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingDouble(node -> -maxCulturalValue.get(node)));
+
+        // Initialize distances and previous nodes
+        graph.getNodes().forEach(node -> {
+            maxCulturalValue.put(node, Double.NEGATIVE_INFINITY);
+            prev.put(node, null);
+        });
+        maxCulturalValue.put(start, start.getCulturalValue());
+        pq.add(start);
+
+        while (!pq.isEmpty()) {
+            Node current = pq.poll();
+
+            if (current.equals(end)) {
+                return reconstructPath((Node) prev, (Map<Node, Node>) end);
+            }
+
+            graph.getEdgesFromNode(current).forEach(edge -> {
+                Node neighbor = edge.getEnd();
+                double newCulturalValue = maxCulturalValue.get(current) + neighbor.getCulturalValue();
+                if (newCulturalValue > maxCulturalValue.get(neighbor)) {
+                    maxCulturalValue.put(neighbor, newCulturalValue);
+                    prev.put(neighbor, current);
+                    // Update the priority queue
+                    pq.remove(neighbor); // Remove the neighbor to update its priority
+                    pq.add(neighbor); // Re-add the neighbor with the new higher cultural value
+                }
+            });
+        }
+
+        return Collections.emptyList(); // Return empty list if no path is found
     }
 }
 

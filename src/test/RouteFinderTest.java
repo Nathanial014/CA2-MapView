@@ -1,10 +1,13 @@
-package com.example.ca2mapview;
-
+import com.example.ca2mapview.Edge;
+import com.example.ca2mapview.Graph;
+import com.example.ca2mapview.Node;
+import com.example.ca2mapview.RouteFinder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteFinderTest {
     private Graph graph;

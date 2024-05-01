@@ -1,10 +1,14 @@
-package com.example.ca2mapview;
-
+import com.example.ca2mapview.Dijkstra;
+import com.example.ca2mapview.Edge;
+import com.example.ca2mapview.Graph;
+import com.example.ca2mapview.Node;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DijkstraTest {
     private Graph graph;
