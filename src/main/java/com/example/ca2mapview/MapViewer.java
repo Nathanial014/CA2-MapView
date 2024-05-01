@@ -20,7 +20,7 @@ public class MapViewer extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MapViewer.class.getResource("MapView.fxml"));
         scene = new Scene(fxmlLoader.load(), 1000, 700);
 
-        stage.setTitle("Map Viewer");
+        stage.setTitle("Map Route Finder ");
         stage.setScene(scene);
         stage.show();
 
