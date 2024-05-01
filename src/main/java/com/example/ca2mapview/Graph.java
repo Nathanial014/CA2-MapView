@@ -50,6 +50,8 @@ public class Graph {
     private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
 
 
+    public void addEdge(Edge edge) {
+    }
 }
 
 

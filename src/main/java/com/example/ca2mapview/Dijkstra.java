@@ -51,7 +51,7 @@ public class Dijkstra {
         return path;
     }
     public List<Node> findMostCulturalPath(Node start, Node end) {
-        return dijkstra(start, end, true)
+        return dijkstra(start, end, true);
     }
 }
 
