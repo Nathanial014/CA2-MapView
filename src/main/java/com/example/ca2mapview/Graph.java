@@ -9,10 +9,6 @@ public class Graph {
     private Map<String, Node> nodes = new HashMap<>();
     private List<Edge> edges = new ArrayList<>();
 
-    //public void addNode(Node node) {
-   //     nodes.put(node.getId(), node);
-    //}
-
     public void addNode(Node node) {
         nodes.put(node.getId(), node);
         adjacencyList.put(node, new ArrayList<>());  // Initialize adjacency list for the new node
@@ -23,13 +19,6 @@ public class Graph {
         edges.add(edge);
         adjacencyList.get(start).add(edge);  // Add the edge to the start node's list
     }
-
-
-
-    // void addEdge(Node start, Node end, double distance) {
-    //    Edge edge = new Edge(start, end, distance);
-    //    edges.add(edge);
-    //}
 
     public Node getNode(String id) {
         return nodes.get(id);
@@ -49,9 +38,6 @@ public class Graph {
 
     private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
 
-
-    public void addEdge(Edge edge) {
-    }
 }
 
 

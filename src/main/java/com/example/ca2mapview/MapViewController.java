@@ -47,16 +47,17 @@ public class MapViewController {
     }
     private void handleCanvasClick(MouseEvent event) {
         if (startPoint.getText().isEmpty()) {
-            startX = event.getScreenX();
-            startY = event.getScreenY();
+            startX = event.getX();
+            startY = event.getY();
             startPoint.setText(String.format("X: %.2f, Y: %.2f", startX, startY));
         } else if (endPoint.getText().isEmpty()) {
-            endX = event.getScreenX();
-            endY = event.getScreenY();
+            endX = event.getX();
+            endY = event.getY();
             endPoint.setText(String.format("X: %.2f, Y: %.2f", endX, endY));
             drawRoute(startX, startY, endX, endY);
         }
     }
+
     private void drawMap() {
         // Here you would load and draw your base map
         // and set a background color
@@ -69,7 +70,7 @@ public class MapViewController {
     }
 
     @FXML
-    private void openImage() {
+    public void openImage() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image File");
         fileChooser.getExtensionFilters().addAll(
@@ -78,8 +79,13 @@ public class MapViewController {
 
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
-            Image image = new Image(selectedFile.toURI().toString());
-            gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
+            try {
+                Image image = new Image(selectedFile.toURI().toString());
+                gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load image: " + e.getMessage());
+                alert.show();
+            }
         }
     }
 
@@ -117,8 +123,3 @@ public class MapViewController {
         window.show();
     }
 }
-
-
-
-
-

@@ -73,7 +73,7 @@ public class Dijkstra {
             Node current = pq.poll();
 
             if (current.equals(end)) {
-                return reconstructPath((Node) prev, (Map<Node, Node>) end);
+                return reconstructPath(end, prev);
             }
 
             graph.getEdgesFromNode(current).forEach(edge -> {
