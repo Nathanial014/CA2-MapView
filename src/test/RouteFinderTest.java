@@ -16,19 +16,22 @@ public class RouteFinderTest {
 
     @BeforeEach
     void setUp() {
-        // Setup graph and nodes here
         graph = new Graph();
-        startNode = new Node("Start", 0, 0, 10);
-        endNode = new Node("End", 10, 10, 20);
-        Node middleNode = new Node("Middle", 5, 5, 15);
+        // Create nodes with integer IDs and names
+        startNode = new Node(1, "Start", 0, 0, 10);
+        endNode = new Node(3, "End", 10, 10, 20);
+        Node middleNode = new Node(2, "Middle", 5, 5, 15);
 
+        // Add nodes to the graph
         graph.addNode(startNode);
         graph.addNode(middleNode);
         graph.addNode(endNode);
 
+        // Create edges between nodes
         graph.addEdge(new Edge(startNode, middleNode, 5));
         graph.addEdge(new Edge(middleNode, endNode, 5));
 
+        // Initialize RouteFinder with the graph
         routeFinder = new RouteFinder(graph);
     }
 
@@ -37,8 +40,8 @@ public class RouteFinderTest {
         List<Node> route = routeFinder.findShortestRouteByDistance(startNode, endNode);
         assertNotNull(route);
         assertFalse(route.isEmpty());
-        assertEquals("Start", route.get(0).getId());
-        assertEquals("End", route.get(route.size() - 1).getId());
+        assertEquals(startNode.getId(), route.get(0).getId()); // Use integer IDs for comparison
+        assertEquals(endNode.getId(), route.get(route.size() - 1).getId()); // Use integer IDs for comparison
     }
 
     @Test
@@ -46,8 +49,8 @@ public class RouteFinderTest {
         List<Node> route = routeFinder.findShortestRouteByHops(startNode, endNode);
         assertNotNull(route);
         assertFalse(route.isEmpty());
-        assertEquals("Start", route.get(0).getId());
-        assertEquals("End", route.get(route.size() - 1).getId());
+        assertEquals(startNode.getId(), route.get(0).getId());
+        assertEquals(endNode.getId(), route.get(route.size() - 1).getId());
     }
 
     @Test
@@ -55,7 +58,7 @@ public class RouteFinderTest {
         List<List<Node>> routes = routeFinder.findRoutePermutations(startNode, endNode, 2);
         assertNotNull(routes);
         assertFalse(routes.isEmpty());
-        assertTrue(routes.size() <= 2); // Ensuring it doesn't exceed maxRoutes
+        assertTrue(routes.size() <= 2); // Ensure it doesn't exceed maxRoutes
     }
 
     @Test
@@ -63,7 +66,7 @@ public class RouteFinderTest {
         List<Node> route = routeFinder.findMostCulturalRoute(startNode, endNode);
         assertNotNull(route);
         assertFalse(route.isEmpty());
-        assertEquals("Start", route.get(0).getId());
-        assertTrue(route.stream().anyMatch(node -> node.getId().equals("End")));
+        assertEquals(startNode.getId(), route.get(0).getId());
+        assertTrue(route.stream().anyMatch(node -> node.getId() == endNode.getId()));
     }
 }

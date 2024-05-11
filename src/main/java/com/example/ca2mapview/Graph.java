@@ -1,16 +1,13 @@
 package com.example.ca2mapview;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
     private Map<String, Node> nodes = new HashMap<>();
     private List<Edge> edges = new ArrayList<>();
 
     public void addNode(Node node) {
-        nodes.put(node.getId(), node);
+        nodes.put(String.valueOf(node.getId()), node);
         adjacencyList.put(node, new ArrayList<>());  // Initialize adjacency list for the new node
     }
 
@@ -18,6 +15,20 @@ public class Graph {
         Edge edge = new Edge(start, end, distance);
         edges.add(edge);
         adjacencyList.get(start).add(edge);  // Add the edge to the start node's list
+    }
+
+    public void updateEdge(Node start, Node end, double newDistance) {
+        List<Edge> edges = adjacencyList.get(start.getId());
+        if (edges != null) {
+            for (Edge edge : edges) {
+                if (edge.getEnd().equals(end)) {
+                    edge.setDistance(newDistance);
+                }
+            }
+        }
+    }
+    public Node getNodeById(int id) {
+        return nodes.get(id);
     }
 
     public Node getNode(String id) {

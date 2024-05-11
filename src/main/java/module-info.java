@@ -8,8 +8,9 @@ module com.example.ca2mapview {
     requires net.synedra.validatorfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-   // requires eu.hansolo.tilesfx;
+    // requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires commons.csv;
 
     opens com.example.ca2mapview to javafx.fxml;
     exports com.example.ca2mapview;

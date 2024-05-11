@@ -1,5 +1,4 @@
 import com.example.ca2mapview.Dijkstra;
-import com.example.ca2mapview.Edge;
 import com.example.ca2mapview.Graph;
 import com.example.ca2mapview.Node;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,10 +29,10 @@ public class DijkstraTest {
         graph.addNode(nodeD);
 
         // Connect nodes with edges
-        graph.addEdge(new Edge(nodeA, nodeB, 5));
-        graph.addEdge(new Edge(nodeB, nodeC, 10));
-        graph.addEdge(new Edge(nodeC, nodeD, 15));
-        graph.addEdge(new Edge(nodeA, nodeD, 50));  // Longer but high cultural value path
+        graph.addEdge(nodeA, nodeB, 5);
+        graph.addEdge(nodeB, nodeC, 10);
+        graph.addEdge(nodeC, nodeD, 15);
+        graph.addEdge(nodeA, nodeD, 50);  // Longer but high cultural value path
     }
 
     @Test

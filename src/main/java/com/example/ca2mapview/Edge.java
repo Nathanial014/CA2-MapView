@@ -19,7 +19,17 @@ public class Edge {
         return end;
     }
 
+    public Node getStartNode() {
+        return start;
+    }
+
+    public Node getEndNode() {
+        return end;
+    }
+
     public double getDistance() {
         return distance;
     }
+    public void setDistance(double distance) { this.distance = distance; }
+
 }

@@ -3,8 +3,6 @@ package com.example.ca2mapview;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GraphLoader {
     private Graph graph;
@@ -19,16 +17,19 @@ public class GraphLoader {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 // Assuming format: id, x, y, culturalValue
-                String id = parts[0];
+                int id = Integer.parseInt(parts[0]);  // Convert String ID to int
                 double x = Double.parseDouble(parts[1]);
                 double y = Double.parseDouble(parts[2]);
                 double culturalValue = Double.parseDouble(parts[3]);
 
-                Node node = new Node(id, x, y, culturalValue);
+                Node node = new Node(id, x, y, culturalValue);  // Pass int ID to constructor
                 graph.addNode(node);
             }
+        } catch (NumberFormatException e) {
+            throw new IOException("Error parsing numeric data: " + e.getMessage(), e);
         }
     }
+
 
     private void loadEdgesFromFile(String filePath) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

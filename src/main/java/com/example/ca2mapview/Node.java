@@ -1,28 +1,23 @@
 package com.example.ca2mapview;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-    private String id;
-    private double x, y;
+    private int id; // Assuming ID is an integer, change this type if it's supposed to be a String
+    private double x;
+    private double y;
     private double culturalValue;
     private List<Edge> edges;
 
-    public Node(String id, double x, double y) {
+    public Node(int id, double x, double y, double culturalValue) {
         this.id = id;
         this.x = x;
         this.y = y;
-        this.edges = new ArrayList<>();
-    }
-
-    public Node(String id, double x, double y, double culturalValue) {
-        this(id, x, y);
         this.culturalValue = culturalValue;
     }
 
-    public String getId() {
-        return id;
+    public int getId() {
+        return Integer.parseInt(String.valueOf(id));
     }
 
     public double getX() {

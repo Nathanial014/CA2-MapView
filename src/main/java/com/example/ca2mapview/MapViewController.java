@@ -7,9 +7,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MapViewController {
 
@@ -32,6 +34,7 @@ public class MapViewController {
     private TextField endPoint;
     private GraphicsContext gc;
     private double startX, startY, endX, endY;
+    private Graph graph;
 
     private Scene mainScene;
 
@@ -44,6 +47,10 @@ public class MapViewController {
     private void clearCanvas() {
         gc.setFill(Color.WHITE);
         gc.fillRect(0,0,canvas.getWidth(), canvas.getHeight());
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
     private void handleCanvasClick(MouseEvent event) {
         if (startPoint.getText().isEmpty()) {
@@ -97,11 +104,40 @@ public class MapViewController {
     }
     @FXML
     private void findRoute() {
-        //Placeholder for route finding logic
+        Node startNode = graph.getNode(startPoint.getText()); // Adjust this if node IDs are integers or need parsing
+        Node endNode = graph.getNode(endPoint.getText());
+        if (startNode == null || endNode == null) {
+            return; // Handle error: nodes not found
+        }
+
+        List<Node> path;
         String routeType = routeTypeCombo.getValue();
-        Alert alert = new Alert (Alert.AlertType.INFORMATION);
-        alert.setContentText("FINDING ROUTE OF TYPE: " + routeType);
-        alert.show();
+        switch (routeType) {
+            case "Shortest":
+                path = new Dijkstra(graph).findShortestPath(startNode, endNode);
+                break;
+            case "Scenic":
+                path = new Dijkstra(graph).findMostCulturalPath(startNode, endNode);
+                break;
+            default:
+                return;
+        }
+
+        drawPathOnCanvas(path);
+    }
+    private void drawPathOnCanvas(List<Node> path) {
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.beginPath();
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(2);
+        Node prev = null;
+        for (Node node : path) {
+            if (prev != null) {
+                gc.strokeLine(prev.getX(), prev.getY(), node.getX(), node.getY());
+            }
+            prev = node;
+        }
+        gc.stroke();
     }
     @FXML
     private void closeApplication(){
