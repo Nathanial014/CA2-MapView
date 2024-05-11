@@ -9,17 +9,17 @@ public class Dijkstra {
         this.graph = graph;
     }
 
-    public List<Node> findShortestPath(Node start, Node end) {
+    public List<Node> findShortestPath(Node start, Node end, List<Node> avoid) {
         Map<Node, Double> dist = new HashMap<>();
         Map<Node, Node> prev = new HashMap<>();
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparing(dist::get));
 
-        for (Node node : graph.getNodes()) {
+        graph.getNodes().forEach(node -> {
             dist.put(node, Double.MAX_VALUE);
             prev.put(node, null);
-        }
+        });
         dist.put(start, 0.0);
-        pq.add(start);  // adding only the starting node with a distance of 0
+        pq.add(start);
 
         while (!pq.isEmpty()) {
             Node u = pq.poll();
@@ -28,40 +28,28 @@ public class Dijkstra {
             }
 
             for (Edge edge : graph.getEdgesFromNode(u)) {
+                if (avoid != null && avoid.contains(edge.getEnd())) {
+                    continue;  // Skip if the node is in the avoid list
+                }
                 Node v = edge.getEnd();
                 double weight = edge.getDistance();
                 double distanceThroughU = dist.get(u) + weight;
                 if (distanceThroughU < dist.get(v)) {
                     dist.put(v, distanceThroughU);
                     prev.put(v, u);
-                    pq.remove(v); // Remove the node first to ensure proper ordering
+                    pq.remove(v); // This might be inefficient without a decrease-key operation
                     pq.add(v);
                 }
             }
         }
-        return Collections.emptyList(); // return an empty list if no path found
+        return Collections.emptyList();
     }
 
-    private List<Node> reconstructPath(Node end, Map<Node, Node> prev) {
-        List<Node> path = new ArrayList<>();
-        for (Node at = end; at != null; at = prev.get(at)) {
-            path.add(at);
-        }
-        Collections.reverse(path);
-        return path;
-    }
-//    public List<Node> findMostCulturalPath(Node start, Node end) {
-//        return dijkstra(start, end, true);
-//    }
-    public List<Node> findMostCulturalPath(Node start, Node end) {
-        // This map holds the highest cultural value attainable at each node.
+    public List<Node> findMostCulturalPath(Node start, Node end, List<Node> avoid) {
         Map<Node, Double> maxCulturalValue = new HashMap<>();
-        // This map keeps track of the previous node in the optimal path.
         Map<Node, Node> prev = new HashMap<>();
-        // Priority queue to explore the nodes with the highest cultural values first.
         PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingDouble(node -> -maxCulturalValue.get(node)));
 
-        // Initialize distances and previous nodes
         graph.getNodes().forEach(node -> {
             maxCulturalValue.put(node, Double.NEGATIVE_INFINITY);
             prev.put(node, null);
@@ -71,25 +59,34 @@ public class Dijkstra {
 
         while (!pq.isEmpty()) {
             Node current = pq.poll();
-
             if (current.equals(end)) {
-                return reconstructPath((Node) prev, (Map<Node, Node>) end);
+                return reconstructPath(end, prev);
             }
 
-            graph.getEdgesFromNode(current).forEach(edge -> {
+            for (Edge edge : graph.getEdgesFromNode(current)) {
+                if (avoid != null && avoid.contains(edge.getEnd())) {
+                    continue;  // Skip nodes in the avoid list
+                }
                 Node neighbor = edge.getEnd();
                 double newCulturalValue = maxCulturalValue.get(current) + neighbor.getCulturalValue();
                 if (newCulturalValue > maxCulturalValue.get(neighbor)) {
                     maxCulturalValue.put(neighbor, newCulturalValue);
                     prev.put(neighbor, current);
-                    // Update the priority queue
-                    pq.remove(neighbor); // Remove the neighbor to update its priority
-                    pq.add(neighbor); // Re-add the neighbor with the new higher cultural value
+                    pq.remove(neighbor); // Update priority
+                    pq.add(neighbor);
                 }
-            });
+            }
         }
+        return Collections.emptyList();
+    }
 
-        return Collections.emptyList(); // Return empty list if no path is found
+    private List<Node> reconstructPath(Node end, Map<Node, Node> prev) {
+        LinkedList<Node> path = new LinkedList<>();
+        Node at = end;
+        while (at != null) {
+            path.addFirst(at);
+            at = prev.get(at);
+        }
+        return path;
     }
 }
-

@@ -10,27 +10,24 @@ public class RouteFinder {
         this.graph = graph;
     }
 
-    // Find the shortest route by distance using Dijkstra's algorithm
-    public List<Node> findShortestRouteByDistance(Node start, Node end) {
+    public List<Node> findRouteWithWaypoints(Node start, Node end, List<Node> waypoints, List<Node> avoid) {
         Dijkstra dijkstra = new Dijkstra(graph);
-        return dijkstra.findShortestPath(start, end);
+        List<Node> route = new ArrayList<>();
+        Node current = start;
+
+        if (waypoints != null && !waypoints.isEmpty()) {
+            for (Node waypoint : waypoints) {
+                route.addAll(dijkstra.findShortestPath(current, waypoint, avoid));
+                current = waypoint;
+            }
+        }
+        route.addAll(dijkstra.findShortestPath(current, end, avoid));
+        return route;
     }
 
-    // Find the shortest route in terms of hops using BFS
-    public List<Node> findShortestRouteByHops(Node start, Node end) {
-        BFS bfs = new BFS(graph);
-        return bfs.findRoute(start, end);
-    }
-
-    // Find multiple route permutations using DFS
-    public List<List<Node>> findRoutePermutations(Node start, Node end, int maxRoutes) {
-        DFS dfs = new DFS(graph, maxRoutes);
-        return dfs.findRoutes(start, end);
-    }
-
-    // Find the most cultural or historic route using a modified Dijkstra's algorithm
-    public List<Node> findMostCulturalRoute(Node start, Node end) {
+    public List<Node> findMostCulturalRoute(Node start, Node end, List<Node> avoid) {
         Dijkstra dijkstra = new Dijkstra(graph);
-        return dijkstra.findMostCulturalPath(start, end);
+        return dijkstra.findMostCulturalPath(start, end, avoid);
     }
 }
+

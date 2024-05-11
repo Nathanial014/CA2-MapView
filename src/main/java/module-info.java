@@ -10,6 +10,7 @@ module com.example.ca2mapview {
     requires org.kordamp.bootstrapfx.core;
    // requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
     opens com.example.ca2mapview to javafx.fxml;
     exports com.example.ca2mapview;
