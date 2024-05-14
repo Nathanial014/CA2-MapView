@@ -7,6 +7,13 @@ public class MapUtils {
     private double scale;
     private static final double SCALE = 1000.0; // Scale pixels per map unit, adjust as needed
 
+    public static double[] pixelToMap(double px, double py) {
+        // Convert pixel coordinates to map coordinates by dividing by the SCALE.
+        double mapX = px / SCALE;
+        double mapY = py / SCALE;
+        return new double[]{mapX, mapY};
+    }
+
     public Line createLine(double x1, double y1, double x2, double y2) {
         double[] start = mapToPixel(x1, y1);
         double[] end = mapToPixel(x2, y2);
@@ -16,13 +23,10 @@ public class MapUtils {
         this.scale = scale;
     }
     public static double[] mapToPixel(double x, double y) {
-        // Convert map coordinates to pixel coordinates
-        return new double[]{x * SCALE, y * SCALE};
-    }
-
-    public static double[] pixelToMap(double px, double py) {
-        // Convert pixel coordinates to map coordinates
-        return new double[]{px / SCALE, py / SCALE};
+        // Convert map coordinates to pixel coordinates by multiplying with the SCALE.
+        double pixelX = x * SCALE;
+        double pixelY = y * SCALE;
+        return new double[]{pixelX, pixelY};
     }
 
     public static double calculateDistance(double x1, double y1, double x2, double y2) {
