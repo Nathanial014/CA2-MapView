@@ -1,5 +1,8 @@
 package com.example.ca2mapview;
 
+import javafx.scene.image.Image;
+
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
