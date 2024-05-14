@@ -11,6 +11,7 @@ module com.example.ca2mapview {
    // requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.desktop;
+    requires commons.csv;
 
     opens com.example.ca2mapview to javafx.fxml;
     exports com.example.ca2mapview;

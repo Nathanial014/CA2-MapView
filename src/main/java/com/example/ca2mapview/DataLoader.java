@@ -20,8 +20,7 @@ public class DataLoader {
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader);
             List<Node> landmarks = new ArrayList<>();
             for (CSVRecord record : records) {
-                int id = Integer.parseInt(record.get("ID")); // Assuming ID is an integer
-                String name = record.get("Name");
+                String id = record.get("ID"); // Changed to String
                 double x = Double.parseDouble(record.get("X"));
                 double y = Double.parseDouble(record.get("Y"));
                 double culturalValue = Double.parseDouble(record.get("CulturalValue"));
@@ -31,9 +30,6 @@ public class DataLoader {
         }
     }
 
-
-
-
     public List<Edge> loadRoads(String resourcePath, List<Node> nodes) throws Exception {
         try (InputStreamReader in = new InputStreamReader(
                 getClass().getClassLoader().getResourceAsStream(resourcePath), StandardCharsets.UTF_8)) {
@@ -42,8 +38,8 @@ public class DataLoader {
                     .parse(new BufferedReader(in));
             List<Edge> edges = new ArrayList<>();
             for (CSVRecord record : records) {
-                int startId = Integer.parseInt(record.get("StartID"));
-                int endId = Integer.parseInt(record.get("EndID"));
+                String startId = record.get("StartID"); // Changed to String
+                String endId = record.get("EndID"); // Changed to String
                 double distance = Double.parseDouble(record.get("Distance"));
 
                 Node startNode = findNodeById(nodes, startId);
@@ -59,11 +55,10 @@ public class DataLoader {
         }
     }
 
-    private Node findNodeById(List<Node> nodes, int id) {
+    private Node findNodeById(List<Node> nodes, String id) {
         return nodes.stream()
-                .filter(n -> n.getId() == id)
+                .filter(n -> n.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No node found with ID: " + id));
+                .orElse(null); // Changed to return null instead of throwing an exception for better error handling
     }
-
 }

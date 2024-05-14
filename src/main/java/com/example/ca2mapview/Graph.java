@@ -45,4 +45,21 @@ public class Graph {
     public Collection<Node> getNodes() {
         return nodes.values();
     }
+
+    public Node getNodeById(int id) {
+        return nodes.get(id);
+    }
+
+    public void updateEdge(Node start, Node end, double newDistance) {
+        List<Edge> edges = adjacencyList.get(start);
+        if (edges != null) {
+            for (Edge edge : edges) {
+                if (edge.getEnd().equals(end)) {
+                    edge.setDistance(newDistance);
+                    return; // Break after updating to avoid unnecessary iterations
+                }
+            }
+        }
+    }
+
 }

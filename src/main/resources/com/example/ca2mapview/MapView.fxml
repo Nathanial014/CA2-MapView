@@ -4,9 +4,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2mapview.MapViewController">
     <MenuBar>
         <Menu text="File">
@@ -34,3 +34,4 @@
         </HBox>
     </AnchorPane>
 </VBox>
+
