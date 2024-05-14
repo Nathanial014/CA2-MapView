@@ -39,6 +39,7 @@
             <TextField fx:id="startPoint"/>
             <Label text="End:"/>
             <TextField fx:id="endPoint"/>
+            <Button text="Draw Route" onAction="#handleDrawRouteButtonAction"/>
         </HBox>
     </SplitPane>
 </VBox>

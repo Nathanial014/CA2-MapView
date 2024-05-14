@@ -98,6 +98,31 @@ public class MapViewController {
     }
 
     @FXML
+    private void handleDrawRouteButtonAction(ActionEvent event) {
+        String startId = startPoint.getText().trim();
+        String endId = endPoint.getText().trim();
+
+        Node startNode = graph.getNode(startId); // Assume getNode() fetches a node based on a unique ID.
+        Node endNode = graph.getNode(endId);
+
+        if (startNode != null && endNode != null) {
+            drawRouteOnCanvas(startNode, endNode);
+        } else {
+            // Handle null nodes, possibly showing an alert to the user
+            System.out.println("Invalid start or end node ID.");
+        }
+    }
+
+    private void drawRouteOnCanvas(Node startNode, Node endNode) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(2);
+
+        // Example uses direct coordinates; adjust as needed if using map scaling.
+        gc.strokeLine(startNode.getX(), startNode.getY(), endNode.getX(), endNode.getY());
+    }
+
+    @FXML
     private void findRoute() {
         try {
             double[] startCoords = parseCoordinates(startPoint.getText().trim());
