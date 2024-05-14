@@ -31,8 +31,20 @@ public class Graph {
     }
 
     public Node getNode(String id) {
-        return nodes.get(id);
+        Node node = nodes.get(id);
+        System.out.println("Retrieving node for id: " + id + " -> " + (node != null ? "Found" : "Not found"));
+        return node;
     }
+
+    public Node getNodeByCoordinates(double x, double y, double tolerance) {
+        for (Node node : nodes.values()) {
+            if (Math.abs(node.getX() - x) <= tolerance && Math.abs(node.getY() - y) <= tolerance) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 
     public List<Edge> getEdges() {
         return edges;

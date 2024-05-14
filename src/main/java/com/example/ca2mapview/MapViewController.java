@@ -11,12 +11,15 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -42,10 +45,24 @@ public class MapViewController {
     private RouteFinder routeFinder;
     private Graph graph; // Ensure this is initialized, perhaps passed through a constructor or setter
 
+    @FXML
+    private ImageView MapViewer;
+
     private Scene mainScene; // Field to hold the reference to the main scene
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+        this.routeFinder = new RouteFinder(graph);
+    }
 
     @FXML
     public void initialize() {
+        this.graph = new Graph();  // Initialize graph here if it's not shared
+        this.routeFinder = new RouteFinder(graph); // Ensure that the graph is initialized before this line
+        // Load and display image if mapView is already linked
+        if (MapViewer != null) {
+            processImageForRoutes();  // Make sure this is called after the image is actually loaded
+        }
         gc = canvas.getGraphicsContext2D();
         drawMap();
         canvas.setOnMouseClicked(this::handleCanvasClick);
@@ -61,8 +78,12 @@ public class MapViewController {
     }
 
     private void handleCanvasClick(MouseEvent event) {
-        double x = event.getX();
-        double y = event.getY();
+        double px = event.getX();
+        double py = event.getY();
+        double[] mapCoords = MapUtils.pixelToMap(px, py);
+        double x = mapCoords[0];
+        double y = mapCoords[1];
+
         if (startPoint.getText().isEmpty()) {
             startPoint.setText(String.format("X: %.2f, Y: %.2f", x, y));
         } else if (endPoint.getText().isEmpty()) {
@@ -78,44 +99,80 @@ public class MapViewController {
 
     @FXML
     private void findRoute() {
-        String startId = startPoint.getText().trim();
-        String endId = endPoint.getText().trim();
-        Node startNode = graph.getNode(startId);
-        Node endNode = graph.getNode(endId);
+        try {
+            double[] startCoords = parseCoordinates(startPoint.getText().trim());
+            double[] endCoords = parseCoordinates(endPoint.getText().trim());
+            Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1], 0.01);
+            Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1], 0.01);
 
-        if (startNode != null && endNode != null) {
-            switch (routeTypeCombo.getValue()) {
-                case "DFS":
-                    DFS dfs = new DFS(graph, 3); // Assuming a limit of 3 routes
-                    List<List<Node>> routes = dfs.findRoutes(startNode, endNode);
-                    if (!routes.isEmpty()) {
-                        drawRouteOnCanvas(routes.get(0)); // Display the first found route
-                    } else {
-                        showAlert("No routes found.");
-                    }
-                    break;
-                case "BFS":
-                    BFS bfs = new BFS(graph);
-                    List<Node> bfsRoute = bfs.findRoute(startNode, endNode);
-                    drawRouteOnCanvas(bfsRoute);
-                    break;
-                case "Cultural":
-                    List<Node> avoid = parseNodes(avoidField.getText());
-                    List<Node> route = routeFinder.findMostCulturalRoute(startNode, endNode, avoid);
-                    drawRouteOnCanvas(route);
-                    break;
-                case "With Waypoints":
-                    List<Node> waypoints = parseNodes(waypointsField.getText());
-                    List<Node> avoidList = parseNodes(avoidField.getText());
-                    route = routeFinder.findRouteWithWaypoints(startNode, endNode, waypoints, avoidList);
-                    drawRouteOnCanvas(route);
-                    break;
-                default:
-                    showAlert("Please select a valid route type!");
-                    break;
+            if (startNode != null && endNode != null) {
+                switch (routeTypeCombo.getValue()) {
+                    case "DFS":
+                        DFS dfs = new DFS(graph, 3); // Assuming a limit of 3 routes
+                        List<List<Node>> routes = dfs.findRoutes(startNode, endNode);
+                        if (!routes.isEmpty()) {
+                            drawRouteOnCanvas(routes.get(0)); // Display the first found route
+                        } else {
+                            showAlert("No routes found.");
+                        }
+                        break;
+                    case "BFS":
+                        BFS bfs = new BFS(graph);
+                        List<Node> bfsRoute = bfs.findRoute(startNode, endNode);
+                        drawRouteOnCanvas(bfsRoute);
+                        break;
+                    case "Cultural":
+                        List<Node> avoid = parseNodes(avoidField.getText());
+                        List<Node> route = routeFinder.findMostCulturalRoute(startNode, endNode, avoid);
+                        drawRouteOnCanvas(route);
+                        break;
+                    case "With Waypoints":
+                        List<Node> waypoints = parseNodes(waypointsField.getText());
+                        List<Node> avoidList = parseNodes(avoidField.getText());
+                        route = routeFinder.findRouteWithWaypoints(startNode, endNode, waypoints, avoidList);
+                        drawRouteOnCanvas(route);
+                        break;
+                    default:
+                        showAlert("Please select a valid route type!");
+                        break;
+                }
+            } else {
+                if (startNode != null && endNode != null) {
+                    // Proceed with finding the route
+                } else {
+                    showAlert("Invalid start or end node!");
+                    System.out.println("Invalid nodes: " + (startNode == null ? "Start node not found" : "") + (endNode == null ? "End node not found" : ""));
+                }
             }
-        } else {
-            showAlert("Invalid start or end node!");
+        } catch (NumberFormatException e) {
+            showAlert("Invalid coordinate format!");
+        }
+    }
+
+        private double[] parseCoordinates(String input) throws NumberFormatException {
+            String[] parts = input.split(",");
+            double x = Double.parseDouble(parts[0].split(":")[1].trim());
+            double y = Double.parseDouble(parts[1].trim());
+            return new double[]{x, y};
+        }
+
+
+    private void processImageForRoutes() {
+        Image image = MapViewer.getImage();
+        if (image == null) return;
+
+        PixelReader pixelReader = image.getPixelReader();
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+
+        // Example: scan each pixel to determine if it's part of a path
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color color = pixelReader.getColor(x, y);
+                if (color.equals(Color.WHITE)) { // Assuming white is the path color
+                    // This pixel is part of a path
+                }
+            }
         }
     }
 
@@ -157,6 +214,7 @@ public class MapViewController {
         );
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
+            // Load and display image on the canvas
             Image image = new Image(selectedFile.toURI().toString());
             gc.drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
         }

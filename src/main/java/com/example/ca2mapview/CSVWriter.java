@@ -6,9 +6,17 @@ import org.apache.commons.csv.CSVPrinter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class CSVWriter {
+
+    public static void ensureDirectoryExists(String filePath) throws IOException {
+        Path path = Paths.get(filePath);
+        if (Files.notExists(path.getParent())) {
+            Files.createDirectories(path.getParent()); // Ensure the directory exists
+        }
+    }
 
     public static void main(String[] args) {
         try {
@@ -20,6 +28,7 @@ public class CSVWriter {
     }
 
     public static void writeLandmarks(String filePath) throws IOException {
+        ensureDirectoryExists(filePath);
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
              CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                      .withHeader("ID", "Name", "X", "Y", "CulturalValue"))) {

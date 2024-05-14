@@ -7,6 +7,7 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2mapview.MapViewController">
     <MenuBar>
         <Menu text="File">
@@ -14,24 +15,31 @@
             <MenuItem text="Exit" onAction="#closeApplication"/>
         </Menu>
     </MenuBar>
-    <AnchorPane>
-        <Canvas fx:id="canvas" width="800" height="600" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" AnchorPane.bottomAnchor="50.0"/>
-        <HBox spacing="10" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+    <SplitPane orientation="VERTICAL" dividerPositions="0.9">
+        <AnchorPane>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <ImageView fx:id="MapViewer" fitWidth="800" fitHeight="600" preserveRatio="true"
+                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"/>
+            <Canvas fx:id="canvas" width="800" height="600"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"/>
+        </AnchorPane>
+        <HBox>
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
             <Button text="Find Route" onAction="#findRoute"/>
             <ComboBox fx:id="routeTypeCombo" promptText="Select Route Type">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Shortest"/>
-                        <String fx:value="Scenic"/>
-                        <String fx:value="Avoid Traffic"/>
-                    </FXCollections>
-                </items>
+                <!-- Items will be added dynamically in the controller -->
             </ComboBox>
             <Label text="Start:"/>
             <TextField fx:id="startPoint"/>
             <Label text="End:"/>
             <TextField fx:id="endPoint"/>
         </HBox>
-    </AnchorPane>
+    </SplitPane>
 </VBox>
 
