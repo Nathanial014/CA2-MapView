@@ -29,7 +29,7 @@ public class GraphLoader {
                     System.err.println("Error parsing node data: " + e.getMessage());
                 }
             }
-        } // IOExceptions are already thrown to the caller.
+        }
     }
 
     public void loadEdgesFromFile(String filePath) throws IOException {
