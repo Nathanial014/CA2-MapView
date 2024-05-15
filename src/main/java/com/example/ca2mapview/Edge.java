@@ -24,4 +24,12 @@ public class Edge {
     }
 
     public void setDistance(double newDistance) { this.distance = distance; }
+
+    public Node getStartNode() {
+        return start;
+    }
+
+    public Node getEndNode() {
+        return end;
+    }
 }

@@ -45,6 +45,21 @@ public class Graph {
         return null;
     }
 
+    public Node getStartNode() {
+        // Example logic to fetch the start node
+        if (edges.isEmpty()) {
+            return null;
+        }
+        return edges.get(0).getStartNode();
+    }
+
+    public Node getEndNode() {
+        // Example logic to fetch the end node
+        if (edges.isEmpty()) {
+            return null;
+        }
+        return edges.get(0).getEndNode();
+    }
 
     public List<Edge> getEdges() {
         return edges;

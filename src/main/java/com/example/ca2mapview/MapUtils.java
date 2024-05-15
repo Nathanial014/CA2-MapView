@@ -14,7 +14,7 @@ public class MapUtils {
         return new double[]{mapX, mapY};
     }
 
-    public Line createLine(double x1, double y1, double x2, double y2) {
+    public static Line createLine(double x1, double y1, double x2, double y2) {
         double[] start = mapToPixel(x1, y1);
         double[] end = mapToPixel(x2, y2);
         return new Line(start[0], start[1], end[0], end[1]);

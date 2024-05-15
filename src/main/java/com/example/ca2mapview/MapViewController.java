@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -59,18 +60,60 @@ public class MapViewController {
     public void initialize() {
         this.graph = new Graph();  // Initialize graph here if it's not shared
         this.routeFinder = new RouteFinder(graph); // Ensure that the graph is initialized before this line
+        // Example data to populate the graph
+        populateGraph();
+        // Draw all edges on the canvas
+        drawAllEdgesOnCanvas();
         // Load and display image if mapView is already linked
         if (MapViewer != null) {
-            processImageForRoutes();  // Make sure this is called after the image is actually loaded
+            processImageForRoutes();
         }
         gc = canvas.getGraphicsContext2D();
         drawMap();
         canvas.setOnMouseClicked(this::handleCanvasClick);
-        routeFinder = new RouteFinder(graph);  // Ensure graph is properly initialized
+        routeFinder = new RouteFinder(graph);  // Ensures graph is properly initialized
 
         // Initialize ComboBox with route type options
         routeTypeCombo.getItems().addAll("BFS", "Cultural", "With Waypoints", "DFS");
         routeTypeCombo.setValue("BFS"); // Default selection
+    }
+
+    private void drawAllEdgesOnCanvas() {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLUE);
+        gc.setLineWidth(1);
+
+        List<Edge> edges = graph.getEdges();
+        for (Edge edge : edges) {
+            Node startNode = edge.getStartNode();
+            Node endNode = edge.getEndNode();
+            gc.strokeLine(startNode.getX(), startNode.getY(), endNode.getX(), endNode.getY());
+        }
+    }
+
+    private void populateGraph() {
+        // Example method to populate the graph with nodes and edges
+        Node nodeA = new Node("A", 50, 50, 0);
+        Node nodeB = new Node("B", 150, 150, 0);
+        Node nodeC = new Node("C", 250, 100, 0);
+
+        graph.addNode(nodeA);
+        graph.addNode(nodeB);
+        graph.addNode(nodeC);
+
+        graph.addEdge(nodeA, nodeB, 1);
+        graph.addEdge(nodeB, nodeC, 1);
+        graph.addEdge(nodeC, nodeA, 1);
+
+        Node startNode = graph.getStartNode();
+        Node endNode = graph.getEndNode();
+
+        if (startNode != null && endNode != null) {
+            System.out.println("Start Node: " + startNode.getId());
+            System.out.println("End Node: " + endNode.getId());
+        } else {
+            System.out.println("No start or end node found.");
+        }
     }
 
     public void setMainScene(Scene mainScene) {
@@ -221,6 +264,11 @@ public class MapViewController {
         for (int i = 1; i < route.size(); i++) {
             Node currentNode = route.get(i);
             gc.strokeLine(prevNode.getX(), prevNode.getY(), currentNode.getX(), currentNode.getY());
+
+            // Using createLine method to draw the route
+            Line line = MapUtils.createLine(prevNode.getX(), prevNode.getY(), currentNode.getX(), currentNode.getY());
+            gc.strokeLine(line.getStartX(), line.getStartY(), line.getEndX(), line.getEndY());
+
             prevNode = currentNode;
         }
     }
@@ -256,19 +304,5 @@ public class MapViewController {
     @FXML
     private void closeApplication() {
         System.exit(0);
-    }
-
-    @FXML
-    public void returnToMainGUI(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainGUIApp.fxml"));
-        Parent secondSceneParent = loader.load();
-        Scene secondScene = new Scene(secondSceneParent);
-
-        // Get the stage information
-        Stage window = (Stage) ((javafx.scene.Node) actionEvent.getSource()).getScene().getWindow();
-
-        // Set the new scene
-        window.setScene(secondScene);
-        window.show();
     }
 }

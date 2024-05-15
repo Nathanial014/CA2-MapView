@@ -23,9 +23,7 @@
             <ImageView fx:id="MapViewer" fitWidth="800" fitHeight="600" preserveRatio="true"
                        AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                        AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"/>
-            <Canvas fx:id="canvas" width="800" height="600"
-                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"/>
+            <Canvas fx:id="canvas" width="800" height="600" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
         </AnchorPane>
         <HBox>
             <padding>
