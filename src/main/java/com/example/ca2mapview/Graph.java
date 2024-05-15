@@ -38,7 +38,7 @@ public class Graph {
         return node;
     }
 
-    public Node getNodeByCoordinates(double x, double y) {
+    public Node getNodeByCoordinates(double x, double y, double v) {
         for (Node node : nodes.values()) {
             if (Math.abs(node.getX() - x) <= TOLERANCE && Math.abs(node.getY() - y) <= TOLERANCE) {
                 return node;

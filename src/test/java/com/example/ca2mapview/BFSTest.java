@@ -1,4 +1,4 @@
-package java.com.example.ca2mapview;
+package com.example.ca2mapview;
 
 import com.example.ca2mapview.BFS;
 import com.example.ca2mapview.Graph;

@@ -5,8 +5,6 @@ import javafx.scene.image.Image;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,11 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -170,8 +165,8 @@ public class MapViewController {
         try {
             double[] startCoords = parseCoordinate(startPoint.getText().trim());
             double[] endCoords = parseCoordinate(endPoint.getText().trim());
-            Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1]);
-            Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1]);
+            Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1], 0.5);
+            Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1], 0.5);
 
             if (startNode != null && endNode != null) {
                 switch (routeTypeCombo.getValue()) {
