@@ -168,10 +168,10 @@ public class MapViewController {
     @FXML
     private void findRoute() {
         try {
-            double[] startCoords = parseCoordinates(startPoint.getText().trim());
-            double[] endCoords = parseCoordinates(endPoint.getText().trim());
-            Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1], 0.01);
-            Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1], 0.01);
+            double[] startCoords = parseCoordinate(startPoint.getText().trim());
+            double[] endCoords = parseCoordinate(endPoint.getText().trim());
+            Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1]);
+            Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1]);
 
             if (startNode != null && endNode != null) {
                 switch (routeTypeCombo.getValue()) {
@@ -204,25 +204,34 @@ public class MapViewController {
                         showAlert("Please select a valid route type!");
                         break;
                 }
+
+                // Calculate and display distance between start and end nodes
+                double distance = MapUtils.calculateDistance(startNode.getX(), startNode.getY(), endNode.getX(), endNode.getY());
+                showAlert(String.format("Distance between nodes: %.2f units", distance));
             } else {
-                if (startNode != null && endNode != null) {
-                    // Proceed with finding the route
-                } else {
                     showAlert("Invalid start or end node!");
                     System.out.println("Invalid nodes: " + (startNode == null ? "Start node not found" : "") + (endNode == null ? "End node not found" : ""));
                 }
-            }
+
         } catch (NumberFormatException e) {
             showAlert("Invalid coordinate format!");
         }
     }
 
-        private double[] parseCoordinates(String input) throws NumberFormatException {
-            String[] parts = input.split(",");
-            double x = Double.parseDouble(parts[0].split(":")[1].trim());
-            double y = Double.parseDouble(parts[1].trim());
-            return new double[]{x, y};
+    private double[] parseCoordinate(String coordinate) {
+        String[] parts = coordinate.split(",");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Coordinate must be in format 'X: value, Y: value'");
         }
+
+        try {
+            double x = Double.parseDouble(parts[0].trim().substring(2).trim());
+            double y = Double.parseDouble(parts[1].trim().substring(2).trim());
+            return new double[]{x, y};
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid number format in coordinates");
+        }
+    }
 
 
     private void processImageForRoutes() {

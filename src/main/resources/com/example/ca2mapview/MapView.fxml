@@ -6,8 +6,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-
 <?import javafx.scene.image.ImageView?>
+
 <VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2mapview.MapViewController">
     <MenuBar>
         <Menu text="File">
@@ -20,10 +20,8 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <ImageView fx:id="MapViewer" fitWidth="800" fitHeight="600" preserveRatio="true"
-                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                       AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"/>
-            <Canvas fx:id="canvas" width="800" height="600" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
+            <ImageView fx:id="mapView" fitWidth="700" fitHeight="500" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
+            <Canvas fx:id="canvas" width="700" height="500" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
         </AnchorPane>
         <HBox>
             <padding>
@@ -37,8 +35,8 @@
             <TextField fx:id="startPoint"/>
             <Label text="End:"/>
             <TextField fx:id="endPoint"/>
-            <Button text="Draw Route" onAction="#handleDrawRouteButtonAction"/>
         </HBox>
     </SplitPane>
 </VBox>
+
 

@@ -9,6 +9,7 @@ public class Edge {
         this.start = start;
         this.end = end;
         this.distance = distance;
+        this.distance = MapUtils.calculateDistance(start.getX(), start.getY(), end.getX(), end.getY());
     }
 
     public Node getStart() {

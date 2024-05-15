@@ -3,18 +3,20 @@ package com.example.ca2mapview;
 import java.util.*;
 
 public class Graph {
-    private Map<String, Node> nodes = new HashMap<>();
+    private Map<String, Node> nodes;
     private List<Edge> edges = new ArrayList<>();
     private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
 
+    private static final double TOLERANCE = 0.01;
+
     public Graph() {
-        // Initialize graph components if necessary
+        this.nodes = new HashMap<>();
     }
 
     public void addNode(Node node) {
         if (!nodes.containsKey(node.getId())) {
             nodes.put(node.getId(), node);
-            adjacencyList.put(node, new ArrayList<>()); // Ensure there is a list to hold edges
+            adjacencyList.put(node, new ArrayList<>()); // Ensures there is a list to hold edges
         }
     }
 
@@ -36,9 +38,9 @@ public class Graph {
         return node;
     }
 
-    public Node getNodeByCoordinates(double x, double y, double tolerance) {
+    public Node getNodeByCoordinates(double x, double y) {
         for (Node node : nodes.values()) {
-            if (Math.abs(node.getX() - x) <= tolerance && Math.abs(node.getY() - y) <= tolerance) {
+            if (Math.abs(node.getX() - x) <= TOLERANCE && Math.abs(node.getY() - y) <= TOLERANCE) {
                 return node;
             }
         }
