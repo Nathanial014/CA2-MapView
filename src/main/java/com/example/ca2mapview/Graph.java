@@ -7,7 +7,16 @@ public class Graph {
     private List<Edge> edges = new ArrayList<>();
     private Map<Node, List<Edge>> adjacencyList = new HashMap<>();
 
-    private static final double TOLERANCE = 0.01;
+    private double TOLERANCE = 0.05;
+
+    public Node getNodeByCoordinates(double x, double y) {
+        for (Node node : nodes.values()) {
+            if (Math.abs(node.getX() - x) <= TOLERANCE && Math.abs(node.getY() - y) <= TOLERANCE) {
+                return node;
+            }
+        }
+        return null;
+    }
 
     public Graph() {
         this.nodes = new HashMap<>();

@@ -29,5 +29,10 @@ public class RouteFinder {
         Dijkstra dijkstra = new Dijkstra(graph);
         return dijkstra.findMostCulturalPath(start, end, avoid);
     }
+
+    public List<Node> findShortestRoute(Node startNode, Node endNode) {
+        return null;
+    }
+
 }
 

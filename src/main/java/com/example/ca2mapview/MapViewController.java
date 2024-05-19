@@ -137,27 +137,39 @@ public class MapViewController {
 
     @FXML
     private void handleDrawRouteButtonAction(ActionEvent event) {
-        String startId = startPoint.getText().trim();
-        String endId = endPoint.getText().trim();
+        double[] startCoords = parseCoordinate(startPoint.getText().trim());
+        double[] endCoords = parseCoordinate(endPoint.getText().trim());
 
-        Node startNode = graph.getNode(startId); // Assume getNode() fetches a node based on a unique ID.
-        Node endNode = graph.getNode(endId);
+        Node startNode = graph.getNodeByCoordinates(startCoords[0], startCoords[1]);
+        Node endNode = graph.getNodeByCoordinates(endCoords[0], endCoords[1]);
 
         if (startNode != null && endNode != null) {
             drawRouteOnCanvas(startNode, endNode);
         } else {
-            // Handle null nodes, possibly showing an alert to the user
             System.out.println("Invalid start or end node ID.");
         }
     }
 
     private void drawRouteOnCanvas(Node startNode, Node endNode) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        List<Node> path = routeFinder.findShortestRoute(startNode, endNode); // Assume this method exists
+
+        if (path == null || path.isEmpty()) {
+            System.out.println("No path found.");
+            return;
+        }
+
         gc.setStroke(Color.BLUE);
         gc.setLineWidth(2);
 
-        // Example uses direct coordinates; adjust as needed if using map scaling.
-        gc.strokeLine(startNode.getX(), startNode.getY(), endNode.getX(), endNode.getY());
+        for (int i = 0; i < path.size() - 1; i++) {
+            Node currentNode = path.get(i);
+            Node nextNode = path.get(i + 1);
+
+            double[] currentPixel = MapUtils.mapToPixel(currentNode.getX(), currentNode.getY());
+            double[] nextPixel = MapUtils.mapToPixel(nextNode.getX(), nextNode.getY());
+
+            gc.strokeLine(currentPixel[0], currentPixel[1], nextPixel[0], nextPixel[1]);
+        }
     }
 
     @FXML
@@ -213,19 +225,11 @@ public class MapViewController {
         }
     }
 
-    private double[] parseCoordinate(String coordinate) {
-        String[] parts = coordinate.split(",");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Coordinate must be in format 'X: value, Y: value'");
-        }
-
-        try {
-            double x = Double.parseDouble(parts[0].trim().substring(2).trim());
-            double y = Double.parseDouble(parts[1].trim().substring(2).trim());
-            return new double[]{x, y};
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid number format in coordinates");
-        }
+    private double[] parseCoordinate(String coordinateText) {
+        String[] parts = coordinateText.replace("X:", "").replace("Y:", "").trim().split(",");
+        double x = Double.parseDouble(parts[0].trim());
+        double y = Double.parseDouble(parts[1].trim());
+        return new double[]{x, y};
     }
 
 

@@ -27,7 +27,7 @@
             <padding>
                 <Insets top="10" right="10" bottom="10" left="10"/>
             </padding>
-            <Button text="Find Route" onAction="#findRoute"/>
+            <Button text="Find Route" onAction="#handleDrawRouteButtonAction"/>
             <ComboBox fx:id="routeTypeCombo" promptText="Select Route Type">
                 <!-- Items will be added dynamically in the controller -->
             </ComboBox>
