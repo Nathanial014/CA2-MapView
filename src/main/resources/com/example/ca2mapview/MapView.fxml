@@ -8,35 +8,33 @@
 <?import java.lang.String?>
 <?import javafx.scene.image.ImageView?>
 
-<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2mapview.MapViewController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2mapview.MapViewController" spacing="10" style="-fx-padding: 10;">
     <MenuBar>
         <Menu text="File">
             <MenuItem text="Open Map" onAction="#openImage"/>
             <MenuItem text="Exit" onAction="#closeApplication"/>
         </Menu>
     </MenuBar>
-    <SplitPane orientation="VERTICAL" dividerPositions="0.9">
+    <SplitPane orientation="VERTICAL" dividerPositions="0.8">
         <AnchorPane>
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
             <ImageView fx:id="mapView" fitWidth="700" fitHeight="500" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
-            <Canvas fx:id="canvas" width="700" height="500" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
+            <Canvas fx:id="canvas" width="700" height="500" style="-fx-background-color: #ffffff;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="50.0"/>
         </AnchorPane>
-        <HBox>
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-            <Button text="Find Route" onAction="#handleDrawRouteButtonAction"/>
-            <ComboBox fx:id="routeTypeCombo" promptText="Select Route Type">
+        <HBox spacing="10" alignment="center">
+            <Button text="Draw Route" onAction="#handleDrawRouteButtonAction" style="-fx-font-size: 14px;"/>
+            <Button text="Find Route" onAction="#findRoute"/>
+            <ComboBox fx:id="routeTypeCombo" promptText="Select Route Type" style="-fx-font-size: 14px;">
                 <!-- Items will be added dynamically in the controller -->
             </ComboBox>
-            <Label text="Start:"/>
-            <TextField fx:id="startPoint"/>
-            <Label text="End:"/>
-            <TextField fx:id="endPoint"/>
+            <Label text="Start:" style="-fx-font-size: 14px;"/>
+            <TextField fx:id="startPoint" promptText="Enter start node" style="-fx-font-size: 14px;"/>
+            <Label text="End:" style="-fx-font-size: 14px;"/>
+            <TextField fx:id="endPoint" promptText="Enter end node" style="-fx-font-size: 14px;"/>
+            <Label fx:id="totalDistanceLabel" text="Total Distance: 0.0"/>
+            <Button fx:id="zoomInButton" text="Zoom In" onAction="#handleZoomIn"/> <!-- Zoom In Button -->
+            <Button fx:id="zoomOutButton" text="Zoom Out" onAction="#handleZoomOut"/> <!-- Zoom Out Button -->
+            <Button text="Add Landmark" onAction="#handleAddLandmark"/>
+            <Button text="Update Road" onAction="#handleUpdateRoad"/>
         </HBox>
     </SplitPane>
 </VBox>
-
-
